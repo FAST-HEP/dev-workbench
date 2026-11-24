@@ -46,7 +46,7 @@ def overlaps(path, paths):
 
 
 def validate_inventory(root, repositories):
-    paths = set()
+    paths: set[Path] = set()
     for repository in repositories:
         path = checkout_path(root, repository["path"]).resolve()
         if overlaps(path, paths):

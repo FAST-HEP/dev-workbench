@@ -41,4 +41,6 @@ Discovery prompts you to accept, skip, or stop at each candidate. Use `--all` fo
 
 ## Development
 
-Run `pixi run test`. See the [deployment design](docs/superpowers/specs/2026-11-24-dev-workbench-design.md) for pilot scope and verification criteria.
+The package requires Python 3.13 or newer. The development and CI environment uses Python 3.13 to test the minimum supported version.
+
+Run `pixi run --locked lint`, `pixi run --locked typecheck`, and `pixi run --locked test`. GitHub Actions runs the same checks on pull requests and pushes to `main`. See the [deployment design](docs/superpowers/specs/2026-11-24-dev-workbench-design.md) for pilot scope and verification criteria.

@@ -8,8 +8,17 @@ from pathlib import Path
 import tomlkit
 
 from .providers import discover
-from .workspace import (checkout, checkout_path, find_manifest, identity, overlaps,
-                        save_manifest, status, validate_inventory, validate_url)
+from .workspace import (
+    checkout,
+    checkout_path,
+    find_manifest,
+    identity,
+    overlaps,
+    save_manifest,
+    status,
+    validate_inventory,
+    validate_url,
+)
 
 
 def review(path, document, original, args):

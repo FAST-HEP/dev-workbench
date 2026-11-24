@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dev-workbench"
+version = "0.1.0"
+description = "Set up and inspect multi-repository development workspaces"
+requires-python = ">=3.11"
+dependencies = ["tomlkit>=0.12", "PyGithub>=2.1", "python-gitlab>=4"]
+
+[project.scripts]
+dev-workbench = "dev_workbench.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

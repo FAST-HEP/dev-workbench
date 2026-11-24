@@ -1,0 +1,63 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - 'v[0-9][0-9][0-9][0-9].[0-9][0-9].*'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event.deleted == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Validate release tag
+        shell: bash
+        run: |
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]{4}\.(0[1-9]|1[0-2])\.(0|[1-9][0-9]*)$ ]]; then
+            echo "Expected a release tag in vYYYY.MM.N format."
+            exit 1
+          fi
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Check package version
+        run: |
+          python - <<'PY'
+          import os
+          import tomllib
+
+          with open("pyproject.toml", "rb") as config:
+              version = tomllib.load(config)["project"]["version"]
+          tag = os.environ["GITHUB_REF_NAME"]
+          if tag != f"v{version}":
+              raise SystemExit(f"Tag {tag!r} does not match package version {version!r}.")
+          PY
+      - name: Build and check distributions
+        run: |
+          python -m pip install build twine
+          python -m build
+          python -m twine check --strict dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: distributions
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: distributions
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

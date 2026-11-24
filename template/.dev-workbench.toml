@@ -1,0 +1,2 @@
+# Add [[repositories]] entries with a url and a workspace-relative path.
+# Add [[sources]] entries with a provider and a namespace to discover repositories.

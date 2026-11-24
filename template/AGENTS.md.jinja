@@ -1,0 +1,7 @@
+# {{ workspace_name }} workspace guidance
+
+- Use `.dev-workbench.toml` to identify managed repositories. Preserve uncommitted changes and untracked files in checkouts.
+- Keep local planning notes under `tasks/`.
+{% if commit_convention %}- Follow {{ commit_convention }} for commits.
+{% endif %}{% if ai_label %}- Apply the `{{ ai_label }}` label to pull requests and merge requests with AI-assisted changes.
+{% endif %}

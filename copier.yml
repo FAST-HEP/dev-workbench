@@ -1,0 +1,25 @@
+_subdirectory: template
+
+workspace_name:
+  type: str
+  help: Workspace name
+  validator: "{% if not (workspace_name | regex_search('^[a-z0-9][a-z0-9_-]*$')) %}Use a lowercase name with letters, digits, hyphens or underscores.{% endif %}"
+
+package_repository:
+  type: str
+  help: Git URL of the Dev Workbench package repository
+
+package_ref:
+  type: str
+  default: v0.1.0
+  help: Dev Workbench package tag or revision
+
+commit_convention:
+  type: str
+  default: Conventional Commits
+  help: Commit convention to put in AGENTS.md
+
+ai_label:
+  type: str
+  default: AI
+  help: Review label for AI-assisted changes (leave empty to disable)

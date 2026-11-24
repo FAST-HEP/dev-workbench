@@ -12,7 +12,7 @@ ruff = "*"
 copier = "*"
 
 [pypi-dependencies]
-dev-workbench = { path = ".", editable = true }
+fasthep-dev-workbench = { path = ".", editable = true }
 
 [tasks]
 lint = "ruff check ."

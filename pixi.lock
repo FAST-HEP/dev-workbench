@@ -1313,7 +1313,7 @@ packages:
   size: 24791
   timestamp: 1792622774790
 - pypi: .
-  name: dev-workbench
+  name: fasthep-dev-workbench
   requires_dist:
   - tomlkit>=0.12
   - pygithub>=2.1

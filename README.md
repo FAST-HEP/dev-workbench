@@ -14,7 +14,7 @@ When prompted, use `https://github.com/FAST-HEP/dev-workbench.git` as the packag
 
 ## Adopt an existing workspace
 
-Add `dev-workbench` to your Pixi manifest under `[pypi-dependencies]`, using the Git URL and a pinned `rev`. Create `.dev-workbench.toml` at the workspace root. Existing tasks, guidance, and checkout paths can stay in place.
+Add `fasthep-dev-workbench` to your Pixi manifest under `[pypi-dependencies]`, using the Git URL and a pinned `rev`. Create `.dev-workbench.toml` at the workspace root. Existing tasks, guidance, and checkout paths can stay in place.
 
 ```toml
 [[repositories]]
@@ -56,6 +56,6 @@ and publishes both to PyPI.
 
 Before pushing the first tag, configure a
 [pending Trusted Publisher](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/)
-for the PyPI project `dev-workbench`. Set the GitHub owner to `FAST-HEP`, the
+for the PyPI project `fasthep-dev-workbench`. Set the GitHub owner to `FAST-HEP`, the
 repository to `dev-workbench`, the workflow filename to `release.yml`, and the
 environment to `pypi`.

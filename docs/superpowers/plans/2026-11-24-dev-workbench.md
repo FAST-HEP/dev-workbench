@@ -6,7 +6,7 @@
 
 **Architecture:** Keep manifest, Git operations, and provider discovery separate. The CLI orchestrates review and writes, and the Copier template generates workspace policy and Pixi wiring.
 
-**Tech Stack:** Python 3.11+, Git, TOMLKit, PyGithub, python-gitlab, Pixi, Copier.
+**Tech Stack:** Python 3.13+, Git, TOMLKit, PyGithub, python-gitlab, Pixi, Copier.
 
 **Spec:** [Deployment design](../specs/2026-11-24-dev-workbench-design.md)
 

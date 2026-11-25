@@ -14,7 +14,16 @@ When prompted, use `https://github.com/FAST-HEP/dev-workbench.git` as the packag
 
 ## Adopt an existing workspace
 
-Add `fasthep-dev-workbench` to your Pixi manifest under `[pypi-dependencies]`, using the Git URL and a pinned `rev`. Create `.dev-workbench.toml` at the workspace root. Existing tasks, guidance, and checkout paths can stay in place.
+Add `fasthep-dev-workbench` to your Pixi manifest under `[pypi-dependencies]`, using the Git URL and a pinned `rev`. Existing tasks, guidance, and checkout paths can stay in place.
+
+From the workspace root, create the manifest if it is missing:
+
+```sh
+[ -f .dev-workbench.toml ] || touch .dev-workbench.toml
+```
+
+You can populate the manifest manually, discover repositories from a configured
+source, or import existing checkouts.
 
 ```toml
 [[repositories]]
@@ -43,8 +52,7 @@ Discovery prompts you to accept (`y`), skip (`n` or Enter), or stop and save ear
 
 ### Import local checkouts
 
-Create an empty `.dev-workbench.toml` at the workspace root if you have no
-manifest yet, then run:
+After creating the manifest, run:
 
 ```sh
 pixi run dev-workbench import-existing

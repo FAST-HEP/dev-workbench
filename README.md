@@ -50,7 +50,7 @@ Run `pixi run --locked lint`, `pixi run --locked typecheck`, and `pixi run --loc
 Use calendar versions in `YYYY.MM.N` format, with a two-digit month and a
 release counter starting at `0` each month. Update `project.version` in
 `pyproject.toml`, refresh `pixi.lock`, and wait for CI to pass on the release
-commit. Push a matching tag such as `v2026.11.0`. The release workflow checks
+commit. Push a matching tag such as `2026.11.0`. The release workflow checks
 the tag against the package metadata, builds a wheel and source distribution,
 and publishes both to PyPI.
 

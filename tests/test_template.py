@@ -16,7 +16,7 @@ def test_default_guidance_and_pinned_package():
     assert "Conventional Commits" in guidance
     assert "`AI` label" in guidance
     pixi = tomllib.loads(env.get_template("pixi.toml.jinja").render(**answers))
-    assert pixi["pypi-dependencies"]["fasthep-dev-workbench"]["rev"] == "v2026.11.0"
+    assert pixi["pypi-dependencies"]["fasthep-dev-workbench"]["rev"] == "2026.11.0"
 
 
 def test_custom_commit_convention_and_disabled_label():

@@ -19,8 +19,8 @@ jobs:
       - name: Validate release tag
         shell: bash
         run: |
-          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]{4}\.(0[1-9]|1[0-2])\.(0|[1-9][0-9]*)$ ]]; then
-            echo "Expected a release tag in vYYYY.MM.N format."
+          if [[ ! "$GITHUB_REF_NAME" =~ ^[0-9]{4}\.(0[1-9]|1[0-2])\.(0|[1-9][0-9]*)$ ]]; then
+            echo "Expected a release tag in YYYY.MM.N format."
             exit 1
           fi
       - uses: actions/setup-python@v6
@@ -35,7 +35,7 @@ jobs:
           with open("pyproject.toml", "rb") as config:
               version = tomllib.load(config)["project"]["version"]
           tag = os.environ["GITHUB_REF_NAME"]
-          if tag != f"v{version}":
+          if tag != f"{version}":
               raise SystemExit(f"Tag {tag!r} does not match package version {version!r}.")
           PY
       - name: Build and check distributions

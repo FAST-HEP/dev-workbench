@@ -53,6 +53,13 @@ manifest inventory, including when invoked from a child checkout.
   metadata and Pixi tasks. Use the FAST-HEP symbol, test, profile, and registry
   indexes to identify optional extensions and the project-specific inputs they
   need.
+- Evaluate `repo-scan`, the HSF prototype at
+  `/storage/Workspace/HSF/repo-scan` (reviewed at `2adff3a`), for optional
+  per-repository analysis. It scans Python imports and C++ includes without
+  building or running the target project, and can render a D2 overview.
+  Compare its structured findings with the workspace index and assess which
+  details help people and agents navigate the repositories. Keep generated
+  reports local.
 - Evaluate the read-only parts of `roadmap` and `roadmap-check` once a second
   workspace has a comparable planning format. Keep issue mirroring
   (`tasks-sync`) as a separate capability with explicit provider credentials

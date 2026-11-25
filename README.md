@@ -66,6 +66,16 @@ an `origin` remote. Review candidates with `y` to accept, Enter to skip, or
 manifest and leaves the checkouts in place. Use Git's submodule commands when
 you want to initialize declared paths as submodules.
 
+## Local planning
+
+Keep task notes and planning files in the ignored `tasks/` directory and use
+issues to share work. Copier seeds local guidance and an index for new
+workspaces. Existing workspaces can use their current planning files.
+
+Run `pixi run dev-workbench planning check` to validate the local index and
+optional roadmap. Add `--json` for a machine-readable report. See the
+[local planning guide](docs/planning.md) for supported file formats.
+
 ## Development
 
 The package requires Python 3.13 or newer. The development and CI environment uses Python 3.13 to test the minimum supported version.

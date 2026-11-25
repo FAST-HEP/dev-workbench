@@ -17,7 +17,7 @@ Read the [deployment design](docs/superpowers/specs/2026-11-24-dev-workbench-des
 ## Development and planning
 
 - Once Pixi tasks exist, use the relevant tasks for verification. For packaging changes, verify the pinned package from a separate consumer workspace.
-- Keep durable designs in `docs/` and local planning notes in `tasks/`. Update the relevant command documentation when behaviour changes.
+- Keep durable designs in `docs/` and local planning notes in `tasks/`. Read [the planning guide](docs/planning.md) before changing the task index, roadmap, or issue sync. Update the relevant command documentation when behaviour changes.
 - Consult the [roadmap](docs/roadmap.md) when planning new commands or adapting FAST-HEP scripts.
 
 ## Commits and reviews

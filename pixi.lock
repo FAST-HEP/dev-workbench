@@ -1318,6 +1318,7 @@ packages:
   - tomlkit>=0.12
   - pygithub>=2.1
   - python-gitlab>=4
+  - pyyaml>=6
   requires_python: '>=3.13'
 - pypi: https://files.pythonhosted.org/packages/1a/f1/b474e930c4d910328780e3940da76f5aa5cbc48ce1fc14e44d239d9ea9db/cryptography-50.0.2-cp311-abi3-manylinux_2_28_x86_64.whl
   name: cryptography

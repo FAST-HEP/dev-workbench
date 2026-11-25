@@ -7,6 +7,7 @@ from pathlib import Path
 
 import tomlkit
 
+from .planning import check_planning
 from .providers import discover
 from .workspace import (
     checkout,
@@ -108,6 +109,9 @@ def main(argv=None):
     for command in ("status", "checkout"):
         commands.add_parser(command).add_argument("--json", action="store_true")
     commands.add_parser("import-existing", help="Review local checkouts and declared submodules")
+    planning = commands.add_parser("planning", help="Inspect local task and roadmap files")
+    planning_commands = planning.add_subparsers(dest="planning_command", required=True)
+    planning_commands.add_parser("check").add_argument("--json", action="store_true")
     discovery = commands.add_parser("discover")
     discovery.add_argument("source")
     discovery.add_argument("--all", action="store_true")
@@ -117,6 +121,18 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         path = find_manifest(Path.cwd())
+        if args.command == "planning":
+            report = check_planning(path.parent)
+            if args.json:
+                print(json.dumps(report, indent=2))
+            elif report["diagnostics"]:
+                for diagnostic in report["diagnostics"]:
+                    print(f"{diagnostic['path']}: {diagnostic['message']}")
+            elif report["index_present"] or report["roadmap_present"]:
+                print("Local planning files passed validation.")
+            else:
+                print("No local task index or roadmap found.")
+            return int(bool(report["diagnostics"]))
         original = path.read_text(encoding="utf-8")
         document = tomlkit.parse(original)
         if args.command == "discover":

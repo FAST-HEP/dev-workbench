@@ -9,11 +9,16 @@ Read the [deployment design](docs/superpowers/specs/2026-11-24-dev-workbench-des
 - Exercise Git operations against temporary repositories in tests. If destructive commands are added later, provide a dry run and require interactive confirmation before execution.
 - Require explicit credential selection for authenticated discovery. Keep tokens out of command arguments, logs, manifests, and commits. Use the credential options in the deployment design.
 
+## Command output
+
+- Give every operational command human-readable output by default and a documented `--json` mode. Render both from the same result data and preserve exit codes across formats.
+- In JSON mode, emit one parseable result on stdout. Send prompts, progress, and diagnostics to stderr. Preserve interactive confirmation requirements.
+
 ## Development and planning
 
 - Once Pixi tasks exist, use the relevant tasks for verification. For packaging changes, verify the pinned package from a separate consumer workspace.
 - Keep durable designs in `docs/` and local planning notes in `tasks/`. Update the relevant command documentation when behaviour changes.
-- The first release covers bootstrap, repository discovery and import, checkout, and read-only status. Roadmap tooling, issue sync, and push automation are deferred.
+- Consult the [roadmap](docs/roadmap.md) when planning new commands or adapting FAST-HEP scripts.
 
 ## Commits and reviews
 

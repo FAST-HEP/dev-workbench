@@ -102,3 +102,44 @@ def test_rejects_colliding_manifest_paths_before_checkout(tmp_path, monkeypatch)
 
     monkeypatch.setattr("dev_workbench.cli.checkout", unexpected)
     assert main(["checkout"]) == 1
+
+
+def test_import_existing_offers_declared_submodules_and_direct_checkouts(tmp_path, monkeypatch):
+    root = tmp_path
+    git("init", root)
+    git("-C", root, "remote", "add", "origin", "https://example.org/team/workspace.git")
+    (root / ".gitmodules").write_text(
+        '[submodule "declared"]\n'
+        '  path = nested/declared\n'
+        '  url = ../declared.git\n'
+    )
+    (root / "nested/declared").mkdir(parents=True)
+    nested_repo = root / "nested/ignored"
+    git("init", nested_repo)
+    git("-C", nested_repo, "remote", "add", "origin", "https://example.org/team/ignored.git")
+    direct = root / "direct"
+    git("init", direct)
+    git("-C", direct, "remote", "add", "origin", "git@example.org:team/direct.git")
+    (direct / "untracked").write_text("keep")
+    manifest = root / ".dev-workbench.toml"
+    manifest.touch()
+    prompts = []
+
+    def accept(prompt):
+        prompts.append(prompt)
+        return "y"
+
+    monkeypatch.chdir(root)
+    monkeypatch.setattr("sys.stdin.isatty", lambda: True)
+    monkeypatch.setattr("builtins.input", accept)
+    assert main(["import-existing"]) == 0
+    assert prompts == ["Import direct? [y/N/s] ", "Import nested/declared? [y/N/s] "]
+    imported = manifest.read_text()
+    assert 'url = "git@example.org:team/direct.git"' in imported
+    assert 'path = "nested/declared"' in imported
+    assert 'url = "https://example.org/team/declared.git"' in imported
+    assert (direct / "untracked").read_text() == "keep"
+    assert not (root / "nested/declared/.git").exists()
+    assert main(["import-existing"]) == 0
+    assert len(prompts) == 2
+    assert manifest.read_text() == imported

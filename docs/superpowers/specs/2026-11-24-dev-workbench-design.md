@@ -28,6 +28,12 @@ Complete all API pages before presenting changes. A failed page aborts the disco
 
 Prompt for each eligible addition with `y` to accept, `n` or Enter to skip, and `s` to stop successfully and save choices already accepted. Skipped and unreviewed candidates can reappear on the next run. Save accepted choices in one manifest write. With `--all`, confirm the eligible count and source first. For example, “Add all 18 repositories from gitlab.example.org/group to .dev-workbench.toml? Checkouts happen separately. [y/N]” If confirmation is needed and no terminal is available, exit before writing. Import changes the manifest. Checkout is a separate command.
 
+To adopt an existing workspace, `import-existing` offers entries from the root
+`.gitmodules` file, including uninitialized submodules, and repositories with an
+`origin` remote in immediate child directories. Declared submodules can have
+deeper paths. The command uses the same per-repository review and preserves
+existing inventory entries and checkouts.
+
 ## Authentication
 
 Use PyGithub and python-gitlab for discovery. Select credentials explicitly for each authenticated discovery run and show the target host. Offer three options.

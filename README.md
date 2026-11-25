@@ -41,6 +41,23 @@ pixi run dev-workbench status
 
 Discovery prompts you to accept (`y`), skip (`n` or Enter), or stop and save earlier choices (`s`) at each candidate. Use `--all` for a single confirmation. Discovery updates the inventory. Checkout is a separate step that clones missing repositories using your normal Git credentials. With `--token-file`, discovery works without `gh` or `glab`.
 
+### Import local checkouts
+
+Create an empty `.dev-workbench.toml` at the workspace root if you have no
+manifest yet, then run:
+
+```sh
+pixi run dev-workbench import-existing
+pixi run dev-workbench status
+```
+
+The import offers submodules declared in the root `.gitmodules`, including
+uninitialized ones, and Git checkouts in immediate child directories that have
+an `origin` remote. Review candidates with `y` to accept, Enter to skip, or
+`s` to save earlier choices and stop. Import writes accepted entries to the
+manifest and leaves the checkouts in place. Use Git's submodule commands when
+you want to initialize declared paths as submodules.
+
 ## Development
 
 The package requires Python 3.13 or newer. The development and CI environment uses Python 3.13 to test the minimum supported version.

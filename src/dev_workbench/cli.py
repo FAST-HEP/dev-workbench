@@ -11,6 +11,7 @@ from .providers import discover
 from .workspace import (
     checkout,
     checkout_path,
+    existing_repositories,
     find_manifest,
     identity,
     overlaps,
@@ -33,29 +34,46 @@ def review(path, document, original, args):
         discovered = discover(source, args)
     except Exception as error:
         raise ValueError(f"Discovery failed ({type(error).__name__}). No repositories were imported.") from None
+    location = source.get("host", f"{source['provider']}.com")
+    return review_candidates(path, document, original, discovered, source_name=args.source,
+                             bulk_location=f"{location}/{source['namespace']}" if args.all else None)
+
+
+def review_candidates(path, document, original, discovered, *, source_name=None, bulk_location=None):
     repositories = document.setdefault("repositories", tomlkit.aot())
     known = {identity(repo["url"]): repo for repo in repositories}
+    by_path = {checkout_path(path.parent, repo["path"]).resolve(): repo for repo in repositories}
     paths = validate_inventory(path.parent, repositories)
     seen = {identity(url) for _, url in discovered}
     additions = []
     for name, url in sorted(discovered):
         validate_url(url)
-        if identity(url) in known:
+        if source_name is not None and identity(url) in known:
             continue
-        target = checkout_path(path.parent, name).resolve()
+        destination = checkout_path(path.parent, name)
+        target = destination.resolve()
+        existing = by_path.get(target)
+        if existing is not None and identity(existing["url"]) == identity(url):
+            continue
         if overlaps(target, paths):
             print(f"Conflict: {name} ({url})")
             continue
-        candidate = {"path": name, "url": url, "source": args.source}
-        if status(path.parent, candidate)["state"] not in {"missing", "present"}:
+        candidate = {"path": name, "url": url}
+        if source_name is not None:
+            candidate["source"] = source_name
+        state = status(path.parent, candidate)["state"]
+        empty_submodule = (source_name is None and state == "occupied"
+                           and destination.is_dir() and not any(destination.iterdir()))
+        if state not in {"missing", "present"} and not empty_submodule:
             print(f"Conflict: {name} ({url})")
             continue
         additions.append(candidate)
         paths.add(target)
         known[identity(url)] = candidate
-    for repo in repositories:
-        if repo.get("source") == args.source and identity(repo["url"]) not in seen:
-            print(f"Missing from discovery: {repo['path']}")
+    if source_name is not None:
+        for repo in repositories:
+            if repo.get("source") == source_name and identity(repo["url"]) not in seen:
+                print(f"Missing from discovery: {repo['path']}")
     for candidate in additions:
         print(f"Add: {candidate['path']} ({candidate['url']})")
     if not additions:
@@ -63,9 +81,8 @@ def review(path, document, original, args):
     if not sys.stdin.isatty():
         raise ValueError("Import confirmation requires a terminal.")
     accepted = []
-    if args.all:
-        location = source.get("host", f"{source['provider']}.com")
-        if input(f"Add all {len(additions)} repositories from {location}/{source['namespace']} "
+    if bulk_location is not None:
+        if input(f"Add all {len(additions)} repositories from {bulk_location} "
                  f"to {path.name}? Checkouts happen separately. [y/N] ").strip().lower() == "y":
             accepted = additions
     else:
@@ -90,6 +107,7 @@ def main(argv=None):
     commands = parser.add_subparsers(dest="command", required=True)
     for command in ("status", "checkout"):
         commands.add_parser(command).add_argument("--json", action="store_true")
+    commands.add_parser("import-existing", help="Review local checkouts and declared submodules")
     discovery = commands.add_parser("discover")
     discovery.add_argument("source")
     discovery.add_argument("--all", action="store_true")
@@ -103,6 +121,8 @@ def main(argv=None):
         document = tomlkit.parse(original)
         if args.command == "discover":
             return review(path, document, original, args)
+        if args.command == "import-existing":
+            return review_candidates(path, document, original, existing_repositories(path.parent))
         action = status if args.command == "status" else checkout
         repositories = document.get("repositories", [])
         validate_inventory(path.parent, repositories)

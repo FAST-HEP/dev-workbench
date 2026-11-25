@@ -44,12 +44,14 @@ def test_discovery_stop_saves_earlier_choices(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr("sys.stdin.isatty", lambda: True)
     monkeypatch.setattr("builtins.input", lambda _: next(answers))
-    answers = iter(["y", "s"])
+    answers = iter(["", "y", "s"])
     monkeypatch.setattr("dev_workbench.cli.discover", lambda *args: [
+        ("earliest", "https://github.com/example/earliest.git"),
         ("first", "https://github.com/example/first.git"),
         ("second", "https://github.com/example/second.git"),
     ])
     assert main(["discover", "example", "--token-file", "token"]) == 0
+    assert 'path = "earliest"' not in manifest.read_text()
     assert 'path = "first"' in manifest.read_text()
     assert 'path = "second"' not in manifest.read_text()
 

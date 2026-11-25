@@ -22,11 +22,11 @@ Checkout operates on the accepted inventory. Clone missing repositories, recogni
 
 ## Discovery and import
 
-Support individual repositories, GitHub organisations, and GitLab groups on configurable hosts. GitLab subgroup traversal is opt-in per source. Explicit clone URLs also support Codeberg. Forgejo organisation discovery can follow the pilots.
+Support individual repositories, GitHub organisations, and GitLab groups on configurable hosts. GitLab subgroup traversal is opt-in per source. Import records SSH clone URLs by default. Sources can set `clone_protocol = "https"` to use HTTPS for new entries. Explicit clone URLs also support Codeberg. Forgejo organisation discovery can follow the pilots.
 
 Complete all API pages before presenting changes. A failed page aborts the discovery run before any import. Show additions, conflicts, and entries that disappeared from discovery. Leave disappeared entries and their checkouts in place pending review.
 
-Prompt for each eligible addition with `y` to accept, `n` to skip, and `s` to stop successfully and save choices already accepted. Skipped and unreviewed candidates can reappear on the next run. Save accepted choices in one manifest write. With `--all`, confirm the eligible count and source first. For example, “Add all 18 repositories from gitlab.example.org/group to .dev-workbench.toml? Checkouts happen separately. [y/N]” If confirmation is needed and no terminal is available, exit before writing. Import changes the manifest. Checkout is a separate command.
+Prompt for each eligible addition with `y` to accept, `n` or Enter to skip, and `s` to stop successfully and save choices already accepted. Skipped and unreviewed candidates can reappear on the next run. Save accepted choices in one manifest write. With `--all`, confirm the eligible count and source first. For example, “Add all 18 repositories from gitlab.example.org/group to .dev-workbench.toml? Checkouts happen separately. [y/N]” If confirmation is needed and no terminal is available, exit before writing. Import changes the manifest. Checkout is a separate command.
 
 ## Authentication
 

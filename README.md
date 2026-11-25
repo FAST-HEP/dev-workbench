@@ -30,6 +30,8 @@ include_subgroups = true
 ```
 
 Use `provider = "github"` and the organisation name as `namespace` for GitHub discovery. Individual repositories can use any Git host.
+Discovery uses SSH clone URLs by default. Set `clone_protocol = "https"` on a
+source to import HTTPS URLs. Existing inventory URLs keep their current protocol.
 
 ```sh
 pixi run dev-workbench discover lab --token-file /path/to/token
@@ -37,7 +39,7 @@ pixi run dev-workbench checkout
 pixi run dev-workbench status
 ```
 
-Discovery prompts you to accept, skip, or stop at each candidate. Use `--all` for a single confirmation. Discovery updates the inventory. Checkout is a separate step that clones missing repositories using your normal Git credentials. With `--token-file`, discovery works without `gh` or `glab`.
+Discovery prompts you to accept (`y`), skip (`n` or Enter), or stop and save earlier choices (`s`) at each candidate. Use `--all` for a single confirmation. Discovery updates the inventory. Checkout is a separate step that clones missing repositories using your normal Git credentials. With `--token-file`, discovery works without `gh` or `glab`.
 
 ## Development
 

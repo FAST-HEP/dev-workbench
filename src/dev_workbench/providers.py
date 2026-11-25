@@ -46,7 +46,7 @@ def cli_token(host):
     return result.stdout.strip()
 
 
-def gitlab_cli_projects(host, namespace, include_subgroups):
+def gitlab_cli_projects(host, namespace, include_subgroups, url_field):
     parameters = urlencode({"with_shared": "false",
                             "include_subgroups": str(include_subgroups).lower()})
     endpoint = f"groups/{quote(namespace, safe='')}/projects?{parameters}"
@@ -60,7 +60,7 @@ def gitlab_cli_projects(host, namespace, include_subgroups):
     if not isinstance(projects, list):
         raise ValueError("Unexpected project list from glab.")
     return [(repo["path_with_namespace"].removeprefix(f"{namespace}/"),
-             repo["http_url_to_repo"]) for repo in projects]
+             repo[url_field]) for repo in projects]
 
 
 def discover(source, args):
@@ -74,15 +74,18 @@ def discover(source, args):
             or any(character.isspace() for character in host)):
         raise ValueError("Use a hostname with an optional port for discovery.")
     token = credential(provider, host, args)
+    use_ssh = source.get("clone_protocol", "ssh") == "ssh"
     if provider == "github":
         from github import Auth, Github
 
         api = "https://api.github.com" if host == "github.com" else f"https://{host}/api/v3"
         with Github(base_url=api, auth=Auth.Token(token)) as client:
-            return [(repo.name, repo.clone_url) for repo in client.get_organization(namespace).get_repos()]
+            return [(repo.name, repo.ssh_url if use_ssh else repo.clone_url)
+                    for repo in client.get_organization(namespace).get_repos()]
     include_subgroups = source.get("include_subgroups", False)
+    url_field = "ssh_url_to_repo" if use_ssh else "http_url_to_repo"
     if token is None:
-        return gitlab_cli_projects(host, namespace, include_subgroups)
+        return gitlab_cli_projects(host, namespace, include_subgroups, url_field)
 
     from gitlab import Gitlab
 
@@ -91,4 +94,4 @@ def discover(source, args):
         projects = group.projects.list(iterator=True, with_shared=False,
                                        include_subgroups=include_subgroups)
         return [(repo.path_with_namespace.removeprefix(f"{namespace}/"),
-                 repo.http_url_to_repo) for repo in projects]
+                 getattr(repo, url_field)) for repo in projects]

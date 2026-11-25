@@ -27,6 +27,8 @@ def review(path, document, original, args):
     if len(sources) != 1:
         raise ValueError("Select exactly one configured source by name or namespace.")
     source = sources[0]
+    if source.get("clone_protocol", "ssh") not in ("ssh", "https"):
+        raise ValueError("clone_protocol must be ssh or https.")
     try:
         discovered = discover(source, args)
     except Exception as error:
@@ -69,7 +71,7 @@ def review(path, document, original, args):
     else:
         for candidate in additions:
             while True:
-                answer = input(f"Import {candidate['path']}? [y/n/s] ").strip().lower()
+                answer = input(f"Import {candidate['path']}? [y/N/s] ").strip().lower() or "n"
                 if answer in {"y", "n", "s"}:
                     break
             if answer == "s":
